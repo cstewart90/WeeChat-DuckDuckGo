@@ -18,13 +18,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+SCRIPT_NAME    = 'duckduckgo'.freeze
+SCRIPT_AUTHOR  = 'kanzo'.freeze
+SCRIPT_DESC    = 'Adds !ddg command to search using DuckDuckGo.'.freeze
+SCRIPT_VERSION = '0.1'.freeze
+SCRIPT_LICENSE = 'MIT'.freeze
+
 require 'cgi'
 require 'open-uri'
 require 'json'
 
 def weechat_init
-  Weechat.register('duckduckgo', 'kanzo', '0.1', 'MIT',
-                   'Adds !ddg command.', '', '')
+  Weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, '', '')
+
   Weechat.hook_print('', 'notify_message', '!ddg', 1, 'hook_print_cb', '')
   Weechat.hook_print('', 'notify_none', '!ddg', 1, 'hook_print_cb', '')
   Weechat::WEECHAT_RC_OK
