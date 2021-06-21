@@ -35,7 +35,7 @@ end
 def hook_print_cb(_data, buffer, _time, _tags, _displayed, _highlight, _prefix, message)
   return Weechat::WEECHAT_RC_OK unless message.downcase.start_with?('!ddg ')
 
-  encoded = CGI.escape(message[5..])
+  encoded = CGI.escape(message[5..-1])
   url = ddg(encoded)
   Weechat.command(buffer, url)
 end
