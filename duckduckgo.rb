@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright (c) 2016 Christopher Stewart
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,19 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-SCRIPT_NAME    = 'duckduckgo'.freeze
-SCRIPT_AUTHOR  = 'kanzo'.freeze
-SCRIPT_DESC    = 'Adds !ddg command to search using DuckDuckGo.'.freeze
-SCRIPT_VERSION = '0.1'.freeze
-SCRIPT_LICENSE = 'MIT'.freeze
-
 require 'cgi'
 require 'open-uri'
 require 'json'
 
 def weechat_init
-  Weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION, SCRIPT_LICENSE, SCRIPT_DESC, '', '')
-
+  Weechat.register('duckduckgo', 'kanzo', '1.0', 'MIT',
+                   'Adds !ddg command.', '', '')
   Weechat.hook_print('', 'notify_message', '!ddg', 1, 'hook_print_cb', '')
   Weechat.hook_print('', 'notify_none', '!ddg', 1, 'hook_print_cb', '')
   Weechat::WEECHAT_RC_OK
@@ -39,16 +35,15 @@ end
 def hook_print_cb(_data, buffer, _time, _tags, _displayed, _highlight, _prefix, message)
   return Weechat::WEECHAT_RC_OK unless message.downcase.start_with?('!ddg ')
 
-  encoded = CGI.escape(message[5..-1])
+  encoded = CGI.escape(message[5..])
   url = ddg(encoded)
-
   Weechat.command(buffer, url)
 end
 
 def ddg(query)
   default_url = "https://duckduckgo.com/?q=#{query}"
   r = open(
-    "https://api.duckduckgo.com/?q=#{query}&format=json&pretty=0&no_redirect=1"
+    "https://api.duckduckgo.com/?format=json&no_redirect=1&no_html=1&skip_disambig=1&q=#{query}"
   ).read
   data = JSON.parse(r)
 
